@@ -59,3 +59,6 @@ typings/
 
 # Build files
 /server/
+
+# Data files
+/feedback.json
