@@ -1,9 +1,9 @@
-import * as Express from 'express';
-import * as Path from 'path';
-import * as Handlebars from 'express-handlebars';
-import * as BodyParser from 'body-parser';
+import Express from 'express';
+import Path from 'path';
+import Handlebars from 'express-handlebars';
+import BodyParser from 'body-parser';
 import {promisify} from 'util';
-import * as Fs from 'fs';
+import Fs from 'fs';
 
 const rootPath = Path.resolve( __dirname, '..' );
 process.chdir( rootPath );
@@ -19,7 +19,7 @@ app.get(
 	},
 );
 
-app.use( Express.static( Path.resolve( rootPath, 'public' ) ) );
+app.use( Express.static( Path.join( rootPath, 'public' ) ) );
 
 app.engine(
 	'.hbs',
