@@ -1,11 +1,10 @@
 import Express from 'express';
-import Path from 'path';
+import { resolve } from 'path';
 import Handlebars from 'express-handlebars';
 import BodyParser from 'body-parser';
-import {promisify} from 'util';
-import Fs from 'fs';
+import { readFile, writeFile } from 'fs/promises';
 
-const rootPath = Path.resolve( __dirname, '..' );
+const rootPath = resolve( __dirname, '..' );
 process.chdir( rootPath );
 
 const app = Express();
@@ -19,7 +18,7 @@ app.get(
 	},
 );
 
-app.use( Express.static( Path.join( rootPath, 'public' ) ) );
+app.use( Express.static( resolve( rootPath, 'public' ) ) );
 
 app.engine(
 	'.hbs',
@@ -59,10 +58,12 @@ app.get(
 );
 
 const jsonParser = BodyParser.json();
-const feedbacksFile = Path.join( rootPath, 'feedback.json' );
+const feedbacksFile = resolve( rootPath, 'feedback.json' );
 
-const readFile = promisify( Fs.readFile );
-const writeFile = promisify( Fs.writeFile );
+type FormFeedbackData = {
+	name: string;
+	message: string;
+};
 
 app.post(
 	'/api/form/feedback',
@@ -75,6 +76,7 @@ app.post(
 		try
 		{
 			const content = await readFile( feedbacksFile, 'utf8' );
+			
 			feedbacks = JSON.parse( content );
 		}
 		catch ( _error )
@@ -93,9 +95,3 @@ app.post(
 		response.send( 'OK' );
 	},
 );
-
-interface FormFeedbackData
-{
-	name: string;
-	message: string;
-}
